@@ -3,6 +3,12 @@
     "FP_PDN_MULTILAYER": false,
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
+        "dir::../../ip/EF_IP_UTIL/hdl/ef_util_lib.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/CF_SPI.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/spi_master.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/bus_wrappers/CF_SPI_WB.v",
+        "dir::../../ip/CF_UART/hdl/rtl/CF_UART.v",
+        "dir::../../ip/CF_UART/hdl/rtl/bus_wrappers/CF_UART_WB.v",
         "dir::../../verilog/rtl/user_proj_example.v"
     ],
     "CLOCK_PERIOD": 25,
