@@ -1,7 +1,5 @@
 from hello_world.hello_world import hello_world
 from hello_world_uart.hello_world_uart import hello_world_uart
-from user_proj_tests.counter_wb.counter_wb import counter_wb
-from user_proj_tests.counter_la.counter_la import counter_la
-from user_proj_tests.counter_la_reset.counter_la_reset import counter_la_reset
-from user_proj_tests.counter_la_clk.counter_la_clk import counter_la_clk
+from user_proj_tests.spi_uart_integration.spi_uart_integration import spi_uart_basic, spi_uart_wishbone, spi_uart_interrupts, spi_uart_gpio_control, spi_uart_logic_analyzer
+from user_proj_tests.spi_uart_wishbone.spi_uart_wishbone import spi_uart_wishbone_basic, spi_uart_wishbone_registers, spi_uart_wishbone_data_transfer
 from gpio_test.gpio_test import gpio_test

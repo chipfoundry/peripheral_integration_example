@@ -16,10 +16,6 @@
 
 # yaml file contain general design information that would mostly need to be updated in the first run only 
 includes: 
-    - counter_la/counter_la.yaml
-    - counter_wb/counter_wb.yaml
-    - counter_la_reset/counter_la_reset.yaml
-    - counter_la_clk/counter_la_clk.yaml
     - spi_uart_integration/spi_uart_integration.yaml
     - spi_uart_wishbone/spi_uart_wishbone.yaml
 
