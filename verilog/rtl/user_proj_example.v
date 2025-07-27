@@ -57,10 +57,10 @@ module user_proj_example #(
     output [127:0] la_data_out,
     input  [127:0] la_oenb,
 
-    // IOs
-    input  [BITS-1:0] io_in,
-    output [BITS-1:0] io_out,
-    output [BITS-1:0] io_oeb,
+    // IOs - only the pins we use (5-14)
+    input  [14:5] io_in,
+    output [14:5] io_out,
+    output [14:5] io_oeb,
 
     // IRQ
     output [2:0] irq
@@ -112,8 +112,9 @@ module user_proj_example #(
     wire uart_tx, uart_rx;
     wire uart_enable = io_in[14];
 
-    // Status signals
-    wire spi_active, uart_active;
+    // Status signals - connect to actual signals from IPs
+    wire spi_active = spi_enable && (spi_csb == 1'b0); // Active when CSB is low
+    wire uart_active = uart_enable && (uart_tx != 1'b1); // Active when TX is not idle
 
     // Wishbone data output multiplexing
     assign wb_data_out = spi_sel ? spi_data_out :
@@ -129,15 +130,15 @@ module user_proj_example #(
     assign wbs_dat_o = wb_data_out;
     assign wbs_ack_o = wb_ack;
 
-    // GPIO output assignments - only assign used pins
+    // GPIO output assignments - only assign the pins we use
     assign io_out[5] = spi_enable ? spi_mosi : 1'b0;    // SPI MOSI
     assign io_out[7] = spi_enable ? spi_sclk : 1'b0;    // SPI SCLK
     assign io_out[8] = spi_enable ? spi_csb : 1'b1;     // SPI CSB (active low)
     assign io_out[9] = uart_enable ? uart_tx : 1'b1;    // UART TX (idle high)
-    assign io_out[11] = spi_active;                      // SPI activity LED
-    assign io_out[12] = uart_active;                     // UART activity LED
+    assign io_out[11] = spi_active;                     // SPI activity LED
+    assign io_out[12] = uart_active;                    // UART activity LED
 
-    // GPIO direction control - only control used pins
+    // GPIO direction control - only control the pins we use
     assign io_oeb[5] = ~spi_enable;     // MOSI output when enabled
     assign io_oeb[6] = 1'b0;            // MISO always input
     assign io_oeb[7] = ~spi_enable;     // SCLK output when enabled

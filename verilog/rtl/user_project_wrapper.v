@@ -111,9 +111,9 @@ user_proj_example mprj (
     // IO Pads - Map to GPIO pins 5-14 for SPI/UART functionality
     // GPIO 5-14 correspond to io_in[12:3] in the wrapper mapping
     // Our design uses: 5=SPI_MOSI, 6=SPI_MISO, 7=SPI_SCLK, 8=SPI_CSB, 9=UART_TX, 10=UART_RX, 11=SPI_LED, 12=UART_LED, 13=SPI_EN, 14=UART_EN
-    .io_in ({io_in[37:15], io_in[12:3], io_in[2:0]}),
-    .io_out({io_out[37:15], io_out[12:3], io_out[2:0]}),
-    .io_oeb({io_oeb[37:15], io_oeb[12:3], io_oeb[2:0]}),
+    .io_in (io_in[14:5]),
+    .io_out(io_out[14:5]),
+    .io_oeb(io_oeb[14:5]),
 
     // IRQ
     .irq(user_irq)
