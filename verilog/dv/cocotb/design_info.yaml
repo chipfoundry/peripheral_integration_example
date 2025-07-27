@@ -1,8 +1,8 @@
-CARAVEL_ROOT: /home/marwan/peripheral_integration_example/caravel
-MCW_ROOT: /home/marwan/peripheral_integration_example/mgmt_core_wrapper
+CARAVEL_ROOT: caravel
+MCW_ROOT: mgmt_core_wrapper
 PDK: sky130A
-PDK_ROOT: /home/marwan/peripheral_integration_example/dependencies/pdks
-USER_PROJECT_ROOT: /home/marwan/peripheral_integration_example
+PDK_ROOT: dependencies/pdks
+USER_PROJECT_ROOT: .
 caravan: false
 clk: 25
 emailto:
