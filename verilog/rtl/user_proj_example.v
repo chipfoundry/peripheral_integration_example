@@ -132,11 +132,15 @@ module user_proj_example #(
 
     // GPIO output assignments - only assign the pins we use
     assign io_out[5] = spi_enable ? spi_mosi : 1'b0;    // SPI MOSI
+    assign io_out[6] = 1'b0;                            // SPI MISO (input, but assign to avoid warning)
     assign io_out[7] = spi_enable ? spi_sclk : 1'b0;    // SPI SCLK
     assign io_out[8] = spi_enable ? spi_csb : 1'b1;     // SPI CSB (active low)
     assign io_out[9] = uart_enable ? uart_tx : 1'b1;    // UART TX (idle high)
+    assign io_out[10] = 1'b0;                           // UART RX (input, but assign to avoid warning)
     assign io_out[11] = spi_active;                     // SPI activity LED
     assign io_out[12] = uart_active;                    // UART activity LED
+    assign io_out[13] = 1'b0;                           // SPI enable (input, but assign to avoid warning)
+    assign io_out[14] = 1'b0;                           // UART enable (input, but assign to avoid warning)
 
     // GPIO direction control - only control the pins we use
     assign io_oeb[5] = ~spi_enable;     // MOSI output when enabled
