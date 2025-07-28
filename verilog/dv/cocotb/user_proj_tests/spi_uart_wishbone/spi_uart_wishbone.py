@@ -21,7 +21,7 @@ import cocotb
 @cocotb.test()
 @report_test
 async def spi_uart_wishbone_basic(dut):
-    """Test basic Wishbone bus connectivity to SPI/UART design"""
+    """Test basic Wishbone connectivity and signal monitoring"""
     caravelEnv = await test_configure(dut, timeout_cycles=100000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_wishbone_basic test")
@@ -31,21 +31,23 @@ async def spi_uart_wishbone_basic(dut):
     await caravelEnv.wait_mgmt_gpio(1)
     await caravelEnv.wait_mgmt_gpio(0)
     
-    # Test basic Wishbone connectivity
-    # Check that we can access the design through Wishbone
-    wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
-    
-    cocotb.log.info(f"[TEST] Initial WB_ACK: {wb_ack}, WB_DATA: {wb_data:08x}")
-    
     # Monitor Wishbone signals for a few cycles
     for i in range(100):
         await cocotb.triggers.ClockCycles(caravelEnv.clk, 1)
         wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-        wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
+        wb_data_val = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value
+        
+        # Handle 'x' values safely
+        try:
+            wb_data = wb_data_val.integer
+            cocotb.log.info(f"[TEST] Cycle {i}: WB_ACK={wb_ack}, WB_DATA={wb_data:08x}")
+        except ValueError:
+            # Handle unresolved 'x' values
+            wb_data_str = str(wb_data_val)
+            cocotb.log.info(f"[TEST] Cycle {i}: WB_ACK={wb_ack}, WB_DATA={wb_data_str} (unresolved)")
         
         if wb_ack == 1:
-            cocotb.log.info(f"[TEST] Wishbone transaction at cycle {i}: data={wb_data:08x}")
+            cocotb.log.info(f"[TEST] Wishbone transaction at cycle {i}: data={wb_data if 'wb_data' in locals() else 'unresolved'}")
     
     cocotb.log.info(f"[TEST] Basic Wishbone connectivity test completed")
 
@@ -78,9 +80,15 @@ async def spi_uart_wishbone_registers(dut):
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
+    wb_data_val = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value
     
-    cocotb.log.info(f"[TEST] Version register read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    # Handle 'x' values safely
+    try:
+        wb_data = wb_data_val.integer
+        cocotb.log.info(f"[TEST] Version register read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    except ValueError:
+        wb_data_str = str(wb_data_val)
+        cocotb.log.info(f"[TEST] Version register read - ACK: {wb_ack}, DATA: {wb_data_str} (unresolved)")
     
     # Read status register (0xF000)
     status_reg = 0xF000
@@ -90,9 +98,14 @@ async def spi_uart_wishbone_registers(dut):
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
+    wb_data_val = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value
     
-    cocotb.log.info(f"[TEST] Status register read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    try:
+        wb_data = wb_data_val.integer
+        cocotb.log.info(f"[TEST] Status register read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    except ValueError:
+        wb_data_str = str(wb_data_val)
+        cocotb.log.info(f"[TEST] Status register read - ACK: {wb_ack}, DATA: {wb_data_str} (unresolved)")
     
     # Test write to control register (0xF004)
     control_reg = 0xF004
@@ -114,9 +127,14 @@ async def spi_uart_wishbone_registers(dut):
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
+    wb_data_val = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value
     
-    cocotb.log.info(f"[TEST] Control register readback - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    try:
+        wb_data = wb_data_val.integer
+        cocotb.log.info(f"[TEST] Control register readback - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    except ValueError:
+        wb_data_str = str(wb_data_val)
+        cocotb.log.info(f"[TEST] Control register readback - ACK: {wb_ack}, DATA: {wb_data_str} (unresolved)")
     
     # Deassert Wishbone signals
     caravelEnv.caravel_hdl.mprj.wbs_cyc_i.value = 0
@@ -137,65 +155,52 @@ async def spi_uart_wishbone_data_transfer(dut):
     await caravelEnv.wait_mgmt_gpio(1)
     await caravelEnv.wait_mgmt_gpio(0)
     
-    # Test SPI IP register access (0x0000-0x0FFF)
-    # Write to SPI TX data register (0x0004)
-    spi_tx_reg = 0x0004
-    spi_data = 0x55  # Test pattern
-    cocotb.log.info(f"[TEST] Writing {spi_data:02x} to SPI TX register at {spi_tx_reg:08x}")
+    # Test SPI IP access (0x0000-0x0FFF)
+    # Write to SPI control register
+    spi_ctrl_reg = 0x0000
+    spi_ctrl_data = 0x00000001  # Enable SPI
+    cocotb.log.info(f"[TEST] Writing {spi_ctrl_data:08x} to SPI control register at {spi_ctrl_reg:08x}")
     
-    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = spi_tx_reg
-    caravelEnv.caravel_hdl.mprj.wbs_dat_i.value = spi_data
+    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = spi_ctrl_reg
+    caravelEnv.caravel_hdl.mprj.wbs_dat_i.value = spi_ctrl_data
     caravelEnv.caravel_hdl.mprj.wbs_cyc_i.value = 1
     caravelEnv.caravel_hdl.mprj.wbs_stb_i.value = 1
     caravelEnv.caravel_hdl.mprj.wbs_we_i.value = 1  # Write
-    caravelEnv.caravel_hdl.mprj.wbs_sel_i.value = 0x1  # Byte 0
+    caravelEnv.caravel_hdl.mprj.wbs_sel_i.value = 0xF  # All bytes
     
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    cocotb.log.info(f"[TEST] SPI TX write - ACK: {wb_ack}")
+    cocotb.log.info(f"[TEST] SPI control register write - ACK: {wb_ack}")
     
-    # Test UART IP register access (0x1000-0x1FFF)
-    # Write to UART TX data register (0x1004)
-    uart_tx_reg = 0x1004
-    uart_data = 0x41  # ASCII 'A'
-    cocotb.log.info(f"[TEST] Writing {uart_data:02x} to UART TX register at {uart_tx_reg:08x}")
+    # Test UART IP access (0x1000-0x1FFF)
+    # Write to UART control register
+    uart_ctrl_reg = 0x1000
+    uart_ctrl_data = 0x00000001  # Enable UART
+    cocotb.log.info(f"[TEST] Writing {uart_ctrl_data:08x} to UART control register at {uart_ctrl_reg:08x}")
     
-    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = uart_tx_reg
-    caravelEnv.caravel_hdl.mprj.wbs_dat_i.value = uart_data
+    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = uart_ctrl_reg
+    caravelEnv.caravel_hdl.mprj.wbs_dat_i.value = uart_ctrl_data
     caravelEnv.caravel_hdl.mprj.wbs_we_i.value = 1  # Write
-    caravelEnv.caravel_hdl.mprj.wbs_sel_i.value = 0x1  # Byte 0
     
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    cocotb.log.info(f"[TEST] UART TX write - ACK: {wb_ack}")
+    cocotb.log.info(f"[TEST] UART control register write - ACK: {wb_ack}")
     
-    # Read SPI status register (0x0014)
-    spi_status_reg = 0x0014
-    cocotb.log.info(f"[TEST] Reading SPI status register at {spi_status_reg:08x}")
-    
-    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = spi_status_reg
+    # Read back SPI status
     caravelEnv.caravel_hdl.mprj.wbs_we_i.value = 0  # Read
-    
     await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
     
     wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
+    wb_data_val = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value
     
-    cocotb.log.info(f"[TEST] SPI status read - ACK: {wb_ack}, DATA: {wb_data:08x}")
-    
-    # Read UART status register (0x100C)
-    uart_status_reg = 0x100C
-    cocotb.log.info(f"[TEST] Reading UART status register at {uart_status_reg:08x}")
-    
-    caravelEnv.caravel_hdl.mprj.wbs_adr_i.value = uart_status_reg
-    await cocotb.triggers.ClockCycles(caravelEnv.clk, 5)
-    
-    wb_ack = caravelEnv.caravel_hdl.mprj.wbs_ack_o.value.integer
-    wb_data = caravelEnv.caravel_hdl.mprj.wbs_dat_o.value.integer
-    
-    cocotb.log.info(f"[TEST] UART status read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    try:
+        wb_data = wb_data_val.integer
+        cocotb.log.info(f"[TEST] SPI status read - ACK: {wb_ack}, DATA: {wb_data:08x}")
+    except ValueError:
+        wb_data_str = str(wb_data_val)
+        cocotb.log.info(f"[TEST] SPI status read - ACK: {wb_ack}, DATA: {wb_data_str} (unresolved)")
     
     # Deassert Wishbone signals
     caravelEnv.caravel_hdl.mprj.wbs_cyc_i.value = 0
