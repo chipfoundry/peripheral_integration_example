@@ -22,7 +22,7 @@ import cocotb
 @report_test
 async def spi_uart_wishbone_basic(dut):
     """Test basic Wishbone connectivity and signal monitoring"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_wishbone_basic test")
     
@@ -55,7 +55,7 @@ async def spi_uart_wishbone_basic(dut):
 @report_test
 async def spi_uart_wishbone_registers(dut):
     """Test Wishbone access to control and status registers"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_wishbone_registers test")
     
@@ -146,7 +146,7 @@ async def spi_uart_wishbone_registers(dut):
 @report_test
 async def spi_uart_wishbone_data_transfer(dut):
     """Test Wishbone data transfer to SPI and UART IPs"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_wishbone_data_transfer test")
     

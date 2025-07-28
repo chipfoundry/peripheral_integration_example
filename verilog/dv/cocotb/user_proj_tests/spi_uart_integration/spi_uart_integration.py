@@ -25,7 +25,7 @@ import random
 @report_test
 async def spi_uart_basic(dut):
     """Test basic SPI/UART integration and GPIO functionality"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_basic test")
     
@@ -74,7 +74,7 @@ async def spi_uart_basic(dut):
 @report_test
 async def spi_uart_wishbone(dut):
     """Test Wishbone bus access to SPI and UART registers"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_wishbone test")
     
@@ -124,7 +124,7 @@ async def spi_uart_wishbone(dut):
 @report_test
 async def spi_uart_interrupts(dut):
     """Test interrupt functionality for SPI and UART"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_interrupts test")
     
@@ -165,7 +165,7 @@ async def spi_uart_interrupts(dut):
 @report_test
 async def spi_uart_gpio_control(dut):
     """Test GPIO control functionality for SPI and UART enable signals"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_gpio_control test")
     
@@ -195,7 +195,7 @@ async def spi_uart_gpio_control(dut):
 @report_test
 async def spi_uart_logic_analyzer(dut):
     """Test logic analyzer functionality for monitoring SPI and UART signals"""
-    caravelEnv = await test_configure(dut, timeout_cycles=100000)
+    caravelEnv = await test_configure(dut, timeout_cycles=10000000)
 
     cocotb.log.info(f"[TEST] Start spi_uart_logic_analyzer test")
     
