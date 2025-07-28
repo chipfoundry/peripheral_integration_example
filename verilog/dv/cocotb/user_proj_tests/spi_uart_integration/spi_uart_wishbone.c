@@ -39,16 +39,16 @@ void main(){
     GPIOs_configureAll(GPIO_MODE_USER_STD_OUT_MONITORED);
     
     // Configure specific GPIOs for SPI/UART
-    GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_MOSI
-    GPIOs_configure(6, GPIO_MODE_USER_STD_IN_NOPULL);      // SPI_MISO (input)
-    GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_SCLK
-    GPIOs_configure(8, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_CSB
-    GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART_TX
-    GPIOs_configure(10, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_RX (input)
-    GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED); // SPI_LED
-    GPIOs_configure(12, GPIO_MODE_USER_STD_OUT_MONITORED); // UART_LED
-    GPIOs_configure(13, GPIO_MODE_USER_STD_IN_NOPULL);     // SPI_EN (input)
-    GPIOs_configure(14, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_EN (input)
+    GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_MOSI
+    GPIOs_configure(6, GPIO_MODE_USER_STD_INPUT_NOPULL);       // SPI_MISO (input)
+    GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_SCLK
+    GPIOs_configure(8, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_CSB
+    GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);      // UART_TX
+    GPIOs_configure(10, GPIO_MODE_USER_STD_INPUT_NOPULL);      // UART_RX (input)
+    GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED);     // SPI_LED
+    GPIOs_configure(12, GPIO_MODE_USER_STD_OUT_MONITORED);     // UART_LED
+    GPIOs_configure(13, GPIO_MODE_USER_STD_INPUT_NOPULL);      // SPI_EN (input)
+    GPIOs_configure(14, GPIO_MODE_USER_STD_INPUT_NOPULL);      // UART_EN (input)
     
     // Configure additional GPIOs for monitoring (32-37)
     GPIOs_configure(32, GPIO_MODE_USER_STD_OUT_MONITORED);
@@ -63,8 +63,7 @@ void main(){
     
     // Set initial GPIO states for testing
     // Enable SPI and UART by setting GPIO 13 and 14 high
-    GPIOs_writeLow(13, 1); // SPI_EN = 1
-    GPIOs_writeLow(14, 1); // UART_EN = 1
+    // Note: We can't directly write to input GPIOs, so we'll just monitor them
     
     // Wait a bit for configuration to settle
     for(int i = 0; i < 1000; i++) {

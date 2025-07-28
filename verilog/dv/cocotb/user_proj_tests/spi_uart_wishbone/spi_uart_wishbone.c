@@ -25,15 +25,15 @@ void main(){
     // Configure GPIOs for Wishbone testing
     GPIOs_configureAll(GPIO_MODE_USER_STD_OUT_MONITORED);
     GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_MOSI
-    GPIOs_configure(6, GPIO_MODE_USER_STD_IN_NOPULL);      // SPI_MISO
+    GPIOs_configure(6, GPIO_MODE_USER_STD_INPUT_NOPULL);      // SPI_MISO
     GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_SCLK
     GPIOs_configure(8, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_CSB
     GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART_TX
-    GPIOs_configure(10, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_RX
+    GPIOs_configure(10, GPIO_MODE_USER_STD_INPUT_NOPULL);     // UART_RX
     GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED); // SPI_LED
     GPIOs_configure(12, GPIO_MODE_USER_STD_OUT_MONITORED); // UART_LED
-    GPIOs_configure(13, GPIO_MODE_USER_STD_IN_NOPULL);     // SPI_EN
-    GPIOs_configure(14, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_EN
+    GPIOs_configure(13, GPIO_MODE_USER_STD_INPUT_NOPULL);     // SPI_EN
+    GPIOs_configure(14, GPIO_MODE_USER_STD_INPUT_NOPULL);     // UART_EN
     
     // Configure monitoring GPIOs
     GPIOs_configure(32, GPIO_MODE_USER_STD_OUT_MONITORED);
@@ -47,8 +47,6 @@ void main(){
     ManagmentGpio_write(1); // configuration finished 
     
     // Enable SPI and UART
-    GPIOs_writeLow(13, 1); // SPI_EN = 1
-    GPIOs_writeLow(14, 1); // UART_EN = 1
     
     // Wait for configuration to settle
     for(int i = 0; i < 1000; i++) {

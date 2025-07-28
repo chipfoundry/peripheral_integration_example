@@ -24,23 +24,22 @@ void main(){
     
     // Configure GPIOs for SPI/UART logic analyzer test
     GPIOs_configureAll(GPIO_MODE_USER_STD_OUT_MONITORED);
-    GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_MOSI
-    GPIOs_configure(6, GPIO_MODE_USER_STD_IN_NOPULL);      // SPI_MISO
-    GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_SCLK
-    GPIOs_configure(8, GPIO_MODE_USER_STD_OUT_MONITORED);  // SPI_CSB
-    GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART_TX
-    GPIOs_configure(10, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_RX
-    GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED); // SPI_LED
-    GPIOs_configure(12, GPIO_MODE_USER_STD_OUT_MONITORED); // UART_LED
-    GPIOs_configure(13, GPIO_MODE_USER_STD_IN_NOPULL);     // SPI_EN
-    GPIOs_configure(14, GPIO_MODE_USER_STD_IN_NOPULL);     // UART_EN
+    GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_MOSI
+    GPIOs_configure(6, GPIO_MODE_USER_STD_INPUT_NOPULL);       // SPI_MISO
+    GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_SCLK
+    GPIOs_configure(8, GPIO_MODE_USER_STD_OUT_MONITORED);      // SPI_CSB
+    GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);      // UART_TX
+    GPIOs_configure(10, GPIO_MODE_USER_STD_INPUT_NOPULL);      // UART_RX
+    GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED);     // SPI_LED
+    GPIOs_configure(12, GPIO_MODE_USER_STD_OUT_MONITORED);     // UART_LED
+    GPIOs_configure(13, GPIO_MODE_USER_STD_INPUT_NOPULL);      // SPI_EN
+    GPIOs_configure(14, GPIO_MODE_USER_STD_INPUT_NOPULL);      // UART_EN
     
     GPIOs_loadConfigs(); // load the configuration 
     ManagmentGpio_write(1); // configuration finished 
     
     // Enable SPI and UART for logic analyzer monitoring
-    GPIOs_writeLow(13, 1); // SPI_EN = 1
-    GPIOs_writeLow(14, 1); // UART_EN = 1
+    // Note: We can't directly write to input GPIOs, so we'll just monitor them
     
     ManagmentGpio_write(0); // test configuration finished 
     
