@@ -21,12 +21,12 @@
 
     "//": "Macros configurations",
     "MACROS": {
-        "user_proj_example": {
+        "user_proj_peripheral_example": {
             "gds": [
-                "dir::../../gds/user_proj_example.gds"
+                "dir::../../gds/user_proj_peripheral_example.gds"
             ],
             "lef": [
-                "dir::../../lef/user_proj_example.lef"
+                "dir::../../lef/user_proj_peripheral_example.lef"
             ],
             "instances": {
                 "mprj": {
@@ -35,21 +35,21 @@
                 }
             },
             "nl": [
-                "dir::../../verilog/gl/user_proj_example.v"
+                "dir::../../verilog/gl/user_proj_peripheral_example.v"
             ],
             "spef": {
                 "min_*": [
-                    "dir::../../spef/multicorner/user_proj_example.min.spef"
+                    "dir::../../spef/multicorner/user_proj_peripheral_example.min.spef"
                 ],
                 "nom_*": [
-                    "dir::../../spef/multicorner/user_proj_example.nom.spef"
+                    "dir::../../spef/multicorner/user_proj_peripheral_example.nom.spef"
                 ],
                 "max_*": [
-                    "dir::../../spef/multicorner/user_proj_example.max.spef"
+                    "dir::../../spef/multicorner/user_proj_peripheral_example.max.spef"
                 ]
             },
             "lib": {
-                "*": "dir::../../lib/user_proj_example.lib"
+                "*": "dir::../../lib/user_proj_peripheral_example.lib"
             }
         }
     },
