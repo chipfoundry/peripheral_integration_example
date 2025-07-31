@@ -103,10 +103,10 @@ user_proj_peripheral_example mprj (
 
 
 
-    // IO Pads - only the pins needed for peripherals (0-11)
-    .io_in (io_in[11:0]),
-    .io_out(io_out[11:0]),
-    .io_oeb(io_oeb[11:0]),
+    // IO Pads - only the pins needed for peripherals (5-16)
+    .io_in (io_in[16:5]),
+    .io_out(io_out[16:5]),
+    .io_oeb(io_oeb[16:5]),
 
     // IRQ
     .irq(user_irq)

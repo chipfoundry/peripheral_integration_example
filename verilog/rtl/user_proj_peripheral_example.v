@@ -61,10 +61,10 @@ module user_proj_peripheral_example #(
 
 
 
-    // IOs - only the pins we need for peripherals
-    input  [11:0] io_in,    // Only pins 0-11 for peripheral I/O
-    output [11:0] io_out,   // Only pins 0-11 for peripheral I/O
-    output [11:0] io_oeb,   // Only pins 0-11 for peripheral I/O
+    // IOs - only the pins we need for peripherals (avoiding 0-4)
+    input  [16:5] io_in,    // Pins 5-16 for peripheral I/O
+    output [16:5] io_out,   // Pins 5-16 for peripheral I/O
+    output [16:5] io_oeb,   // Pins 5-16 for peripheral I/O
 
     // IRQ
     output [2:0] irq
@@ -76,7 +76,7 @@ module user_proj_peripheral_example #(
     wire peripheral_irq;
     
     // I/O enable signals for peripheral pins
-    reg [11:0] io_oeb_reg;
+    reg [16:5] io_oeb_reg;
     
     // Peripheral macro instance
     caravel_peripheral_macro peripheral_macro (
@@ -96,25 +96,25 @@ module user_proj_peripheral_example #(
         // Interrupt
         .irq_o(peripheral_irq),
         
-        // UART0 connections
-        .uart0_rx(io_in[0]),
-        .uart0_tx(io_out[1]),
+        // UART0 connections - using pins 5-6
+        .uart0_rx(io_in[5]),
+        .uart0_tx(io_out[6]),
         
-        // UART1 connections
-        .uart1_rx(io_in[2]),
-        .uart1_tx(io_out[3]),
+        // UART1 connections - using pins 7-8
+        .uart1_rx(io_in[7]),
+        .uart1_tx(io_out[8]),
         
-        // SPI0 connections
-        .spi0_miso(io_in[4]),
-        .spi0_mosi(io_out[5]),
-        .spi0_sclk(io_out[6]),
-        .spi0_csb(io_out[7]),
+        // SPI0 connections - using pins 9-12
+        .spi0_miso(io_in[9]),
+        .spi0_mosi(io_out[10]),
+        .spi0_sclk(io_out[11]),
+        .spi0_csb(io_out[12]),
         
-        // SPI1 connections
-        .spi1_miso(io_in[8]),
-        .spi1_mosi(io_out[9]),
-        .spi1_sclk(io_out[10]),
-        .spi1_csb(io_out[11])
+        // SPI1 connections - using pins 13-16
+        .spi1_miso(io_in[13]),
+        .spi1_mosi(io_out[14]),
+        .spi1_sclk(io_out[15]),
+        .spi1_csb(io_out[16])
     );
     
     // Wishbone interface connections
@@ -131,20 +131,20 @@ module user_proj_peripheral_example #(
         io_oeb_reg = 12'hFFF; // Default all pins as inputs
         
         // UART0 TX pin
-        io_oeb_reg[1] = 1'b0; // Output enable for TX
+        io_oeb_reg[6] = 1'b0; // Output enable for TX
         
         // UART1 TX pin  
-        io_oeb_reg[3] = 1'b0; // Output enable for TX
+        io_oeb_reg[8] = 1'b0; // Output enable for TX
         
         // SPI0 output pins
-        io_oeb_reg[5] = 1'b0; // MOSI
-        io_oeb_reg[6] = 1'b0; // SCLK
-        io_oeb_reg[7] = 1'b0; // CS
+        io_oeb_reg[10] = 1'b0; // MOSI
+        io_oeb_reg[11] = 1'b0; // SCLK
+        io_oeb_reg[12] = 1'b0; // CS
         
         // SPI1 output pins
-        io_oeb_reg[9] = 1'b0;  // MOSI
-        io_oeb_reg[10] = 1'b0; // SCLK
-        io_oeb_reg[11] = 1'b0; // CS
+        io_oeb_reg[14] = 1'b0;  // MOSI
+        io_oeb_reg[15] = 1'b0; // SCLK
+        io_oeb_reg[16] = 1'b0; // CS
     end
     
     assign io_oeb = io_oeb_reg;
