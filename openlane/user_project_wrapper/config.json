@@ -4,12 +4,12 @@
         "dir::../../verilog/rtl/defines.v",
         "dir::../../verilog/rtl/user_project_wrapper.v",
         "dir::../../verilog/rtl/user_proj_uart_spi_max.v",
+        "dir::../../verilog/rtl/CF_UART_WB_no_gating.v",
+        "dir::../../verilog/rtl/CF_SPI_WB_no_gating.v",
         "dir::../../ip/EF_IP_UTIL/hdl/ef_util_lib.v",
         "dir::../../ip/CF_UART/hdl/rtl/CF_UART.v",
-        "dir::../../ip/CF_UART/hdl/rtl/bus_wrappers/CF_UART_WB.v",
         "dir::../../ip/CF_SPI/hdl/rtl/CF_SPI.v",
-        "dir::../../ip/CF_SPI/hdl/rtl/spi_master.v",
-        "dir::../../ip/CF_SPI/hdl/rtl/bus_wrappers/CF_SPI_WB.v"
+        "dir::../../ip/CF_SPI/hdl/rtl/spi_master.v"
     ],
     "PNR_SDC_FILE": "dir::signoff.sdc",
     
