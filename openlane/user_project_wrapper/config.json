@@ -2,58 +2,29 @@
     "//": "Design files",
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
-        "dir::../../verilog/rtl/user_project_wrapper.v"
+        "dir::../../verilog/rtl/user_project_wrapper.v",
+        "dir::../../verilog/rtl/user_proj_uart_spi_max.v",
+        "dir::../../ip/EF_IP_UTIL/hdl/ef_util_lib.v",
+        "dir::../../ip/CF_UART/hdl/rtl/CF_UART.v",
+        "dir::../../ip/CF_UART/hdl/rtl/bus_wrappers/CF_UART_WB.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/CF_SPI.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/spi_master.v",
+        "dir::../../ip/CF_SPI/hdl/rtl/bus_wrappers/CF_SPI_WB.v"
     ],
     "PNR_SDC_FILE": "dir::signoff.sdc",
     
-    "//": "Hardening strategy variables (this is for 1-Macro-First Hardening). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
-    "SYNTH_ELABORATE_ONLY": true,
-    "RUN_POST_GPL_DESIGN_REPAIR": false,
-    "RUN_POST_CTS_RESIZER_TIMING": false,
-    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": false,
-    "FP_PDN_ENABLE_RAILS": false,
-    "RUN_ANTENNA_REPAIR": false,
-    "RUN_FILL_INSERTION": false,
-    "RUN_TAP_ENDCAP_INSERTION": false,
-    "RUN_CTS": false,
-    "RUN_IRDROP_REPORT": false,
+    "//": "Hardening strategy variables (this is for Flattened Design). Visit https://docs.google.com/document/d/1pf-wbpgjeNEM-1TcvX2OJTkHjqH_C9p-LURCASS0Zo8 for more info",
+    "SYNTH_ELABORATE_ONLY": false,
+    "RUN_POST_GPL_DESIGN_REPAIR": true,
+    "RUN_POST_CTS_RESIZER_TIMING": true,
+    "DESIGN_REPAIR_BUFFER_INPUT_PORTS": true,
+    "FP_PDN_ENABLE_RAILS": true,
+    "RUN_ANTENNA_REPAIR": true,
+    "RUN_FILL_INSERTION": true,
+    "RUN_TAP_ENDCAP_INSERTION": true,
+    "RUN_CTS": true,
+    "RUN_IRDROP_REPORT": true,
     "ERROR_ON_SYNTH_CHECKS": false,
-
-    "//": "Macros configurations",
-    "MACROS": {
-        "user_proj_peripheral_example": {
-            "gds": [
-                "dir::../../gds/user_proj_peripheral_example.gds"
-            ],
-            "lef": [
-                "dir::../../lef/user_proj_peripheral_example.lef"
-            ],
-            "instances": {
-                "mprj": {
-                    "location": [60, 15],
-                    "orientation": "N"
-                }
-            },
-            "nl": [
-                "dir::../../verilog/gl/user_proj_peripheral_example.v"
-            ],
-            "spef": {
-                "min_*": [
-                    "dir::../../spef/multicorner/user_proj_peripheral_example.min.spef"
-                ],
-                "nom_*": [
-                    "dir::../../spef/multicorner/user_proj_peripheral_example.nom.spef"
-                ],
-                "max_*": [
-                    "dir::../../spef/multicorner/user_proj_peripheral_example.max.spef"
-                ]
-            },
-            "lib": {
-                "*": "dir::../../lib/user_proj_peripheral_example.lib"
-            }
-        }
-    },
-    "PDN_MACRO_CONNECTIONS": ["mprj vccd2 vssd2 vccd1 vssd1"],
 
     "//": "PDN configurations",
     "FP_PDN_VOFFSET": 5,

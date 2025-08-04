@@ -4,4 +4,10 @@ from user_proj_tests.counter_wb.counter_wb import counter_wb
 from user_proj_tests.counter_la.counter_la import counter_la
 from user_proj_tests.counter_la_reset.counter_la_reset import counter_la_reset
 from user_proj_tests.counter_la_clk.counter_la_clk import counter_la_clk
+from user_proj_tests.uart_test.uart_test import uart_test
+from user_proj_tests.spi_test.spi_test import spi_test
+from user_proj_tests.uart_spi_wb_test.uart_spi_wb_test import uart_spi_wb_test
+from user_proj_tests.uart_spi_io_test.uart_spi_io_test import uart_spi_io_test
+from user_proj_tests.uart_spi_reg_test.uart_spi_reg_test import uart_spi_reg_test
+from user_proj_tests.uart_spi_comprehensive_test.uart_spi_comprehensive_test import uart_spi_comprehensive_test
 from gpio_test.gpio_test import gpio_test

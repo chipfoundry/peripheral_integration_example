@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2023 Efabless Corporation
+# SPDX-FileCopyrightText: 2025 ChipFoundry, a DBA of Umbralogic Technologies LLC
 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,6 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-# yaml file contain general design information that would mostly need to be updated in the first run only 
-includes: 
-    - uart_test/uart_test.yaml
-    - spi_test/spi_test.yaml
-    - uart_spi_wb_test/uart_spi_wb_test.yaml
-    - uart_spi_io_test/uart_spi_io_test.yaml
-    - uart_spi_reg_test/uart_spi_reg_test.yaml
-    - uart_spi_comprehensive_test/uart_spi_comprehensive_test.yaml
-
-
+# YAML file for UART test following official Caravel patterns
+Tests: 
+    - {name: uart_test, sim: RTL} 

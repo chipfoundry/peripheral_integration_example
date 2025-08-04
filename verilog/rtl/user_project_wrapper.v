@@ -82,7 +82,7 @@ module user_project_wrapper #(
 /* User project is instantiated  here   */
 /*--------------------------------------*/
 
-user_proj_peripheral_example mprj (
+user_proj_uart_spi_max mprj (
 `ifdef USE_POWER_PINS
 	.vccd1(vccd1),	// User area 1 1.8V power
 	.vssd1(vssd1),	// User area 1 digital ground
@@ -101,12 +101,10 @@ user_proj_peripheral_example mprj (
     .wbs_ack_o(wbs_ack_o),
     .wbs_dat_o(wbs_dat_o),
 
-
-
-    // IO Pads - only the pins needed for peripherals (5-16)
-    .io_in (io_in[16:5]),
-    .io_out(io_out[16:5]),
-    .io_oeb(io_oeb[16:5]),
+    // IO Pads - using all available pins
+    .io_in (io_in),
+    .io_out(io_out),
+    .io_oeb(io_oeb),
 
     // IRQ
     .irq(user_irq)
