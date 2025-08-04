@@ -16,7 +16,7 @@
 # Caravel user project includes
 -v $(USER_PROJECT_VERILOG)/rtl/user_project_wrapper.v
 -v $(USER_PROJECT_VERILOG)/rtl/user_proj_uart_spi_max.v
--v $(USER_PROJECT_VERILOG)/rtl/CF_SPI_WB_no_gating.v
+-v $(USER_PROJECT_VERILOG)/rtl/CF_UART_WB_no_gating.v
 -v $(USER_PROJECT_VERILOG)/rtl/CF_SPI_WB_no_gating.v
 
 # IP includes
