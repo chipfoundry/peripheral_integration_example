@@ -137,7 +137,7 @@ module user_proj_uart_spi_max #(
     generate
         genvar i;
         for (i = 0; i < 7; i = i + 1) begin : uart_gen
-            CF_UART_WB #(
+            CF_UART_WB_no_gating #(
                 .SC(8),
                 .MDW(9),
                 .GFLEN(8),
@@ -163,7 +163,7 @@ module user_proj_uart_spi_max #(
     // SPI Instances (6 SPIs)
     generate
         for (i = 0; i < 6; i = i + 1) begin : spi_gen
-            CF_SPI_WB #(
+            CF_SPI_WB_no_gating #(
                 .CDW(8),
                 .FAW(4)
             ) spi_inst (
