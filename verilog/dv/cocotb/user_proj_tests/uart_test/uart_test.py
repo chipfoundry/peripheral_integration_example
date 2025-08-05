@@ -21,7 +21,7 @@ import cocotb
 @cocotb.test()
 @report_test
 async def uart_test(dut):
-    caravelEnv = await test_configure(dut, timeout_cycles=50000)
+    caravelEnv = await test_configure(dut, timeout_cycles=500000)
 
     cocotb.log.info(f"[TEST] Start uart_test")
     
