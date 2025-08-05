@@ -51,15 +51,21 @@ void main() {
     
     enableHkSpi(0); // disable housekeeping spi
     
-    // Configure all GPIOs as user output for monitoring
-    GPIOs_configureAll(GPIO_MODE_USER_STD_OUT_MONITORED);
+    // Configure GPIOs for UART TX/RX monitoring
+    GPIOs_configure(1, GPIO_MODE_MGMT_STD_OUTPUT);  // UART0 TX
+    GPIOs_configure(3, GPIO_MODE_MGMT_STD_OUTPUT);  // UART1 TX
+    GPIOs_configure(5, GPIO_MODE_MGMT_STD_OUTPUT);  // UART2 TX
+    GPIOs_configure(7, GPIO_MODE_MGMT_STD_OUTPUT);  // UART3 TX
+    GPIOs_configure(9, GPIO_MODE_MGMT_STD_OUTPUT);  // UART4 TX
+    GPIOs_configure(11, GPIO_MODE_MGMT_STD_OUTPUT); // UART5 TX
+    GPIOs_configure(13, GPIO_MODE_MGMT_STD_OUTPUT); // UART6 TX
     GPIOs_loadConfigs(); // load the configuration
     
     User_enableIF(); // enable interface for wishbone communication
     
     ManagmentGpio_write(1); // configuration finished
     
-    // Test all 7 UART peripherals using proper EF_UART functions
+    // Test all 7 UART peripherals
     for (int uart = 0; uart < 7; uart++) {
         uint32_t base_addr = UART0_BASE + (uart * 0x1000);
         
@@ -67,7 +73,7 @@ void main() {
         CF_UART_configure(base_addr, 0x70);      // 8-bit data, 1 stop bit, no parity
         CF_UART_setPrescale(base_addr, 0x1);     // Set prescale for baud rate
         
-        // Step 2: Enable UART using proper functions (following reference pattern)
+        // Step 2: Enable UART using proper functions
         CF_UART_enable(base_addr);
         CF_UART_setTxFIFOThreshold(base_addr, 3);
         CF_UART_enableTx(base_addr);
@@ -95,11 +101,11 @@ void main() {
             return;
         }
         
-        // Set GPIO to indicate UART test completion
-        ManagmentGpio_write(uart + 2);
+        // Small delay to allow transmission
+        for (volatile int i = 0; i < 1000; i++);
     }
     
-    ManagmentGpio_write(0); // all tests completed successfully
+    ManagmentGpio_write(1); // all tests completed successfully
     
     return;
 } 
