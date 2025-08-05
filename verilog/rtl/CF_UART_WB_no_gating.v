@@ -162,7 +162,7 @@ module CF_UART_WB_no_gating #(
     (adr_i[15:0] == PR_REG_OFFSET) ? {16'h0, prescaler} :
     (adr_i[15:0] == CTRL_REG_OFFSET) ? {27'h0, rx_fifo_flush, tx_fifo_flush, rx_en, tx_en, en} :
     (adr_i[15:0] == CFG_REG_OFFSET) ? {8'h0, glitch_filter_en, loopback_en, timeout_bits, rxfifotr, txfifotr, parity_type, stop_bits_count, data_size} :
-    (adr_i[15:0] == MATCH_REG_OFFSET) ? {32-MDW{1'b0}, match_data} :
+    (adr_i[15:0] == MATCH_REG_OFFSET) ? {{32-MDW{1'b0}}, match_data} :
     (adr_i[15:0] == RX_FIFO_LEVEL_REG_OFFSET) ? {28'h0, rx_level_out} :
     (adr_i[15:0] == TX_FIFO_LEVEL_REG_OFFSET) ? {28'h0, tx_level_out} :
     (adr_i[15:0] == IM_REG_OFFSET) ? 32'h0 :
