@@ -17,23 +17,23 @@
 #include <firmware_apis.h>
 #include "../cf_uart_api.h"
 
-// UART register offsets (based on CF_UART_regs.h)
+// UART register offsets (based on CF_UART_WB_no_gating.v)
 #define UART_RXDATA          0x00    // Read-only data register
 #define UART_TXDATA          0x04    // Write-only data register
 #define UART_PR              0x08    // Prescale register
 #define UART_CTRL            0x0C    // Control register
 #define UART_CFG             0x10    // Configuration register
-#define UART_MATCH           0x18    // Match register
-#define UART_RX_FIFO_LEVEL   0x4000  // RX FIFO level
-#define UART_RX_FIFO_THRESHOLD 0x4004 // RX FIFO threshold
-#define UART_RX_FIFO_FLUSH  0x4008  // RX FIFO flush
-#define UART_TX_FIFO_LEVEL   0x400C  // TX FIFO level
-#define UART_TX_FIFO_THRESHOLD 0x4010 // TX FIFO threshold
-#define UART_TX_FIFO_FLUSH  0x4014  // TX FIFO flush
-#define UART_IM              0x4040  // Interrupt mask
-#define UART_MIS             0x4044  // Masked interrupt status
-#define UART_RIS             0x4048  // Raw interrupt status
-#define UART_IC              0x404C  // Interrupt clear
+#define UART_MATCH           0x1C    // Match register
+#define UART_RX_FIFO_LEVEL   0xFE00  // RX FIFO level
+#define UART_RX_FIFO_THRESHOLD 0xFE04 // RX FIFO threshold
+#define UART_RX_FIFO_FLUSH  0xFE08  // RX FIFO flush
+#define UART_TX_FIFO_LEVEL   0xFE10  // TX FIFO level
+#define UART_TX_FIFO_THRESHOLD 0xFE14 // TX FIFO threshold
+#define UART_TX_FIFO_FLUSH  0xFE18  // TX FIFO flush
+#define UART_IM              0xFF00  // Interrupt mask
+#define UART_MIS             0xFF04  // Masked interrupt status
+#define UART_RIS             0xFF08  // Raw interrupt status
+#define UART_IC              0xFF0C  // Interrupt clear
 
 // UART base addresses for user project UARTs
 #define UART0_BASE   0x30000000
