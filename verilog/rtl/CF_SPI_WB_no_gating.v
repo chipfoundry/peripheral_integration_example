@@ -133,7 +133,7 @@ module CF_SPI_WB_no_gating #(
   assign dat_o = 
     (adr_i[15:0] == RXDATA_REG_OFFSET) ? {24'h0, datao} :
     (adr_i[15:0] == TXDATA_REG_OFFSET) ? {24'h0, datai} :
-    (adr_i[15:0] == CFG_REG_OFFSET) ? {32-CDW-2{1'b0}, clk_divider, CPHA, CPOL} :
+    (adr_i[15:0] == CFG_REG_OFFSET) ? {{32-CDW-2{1'b0}}, clk_divider, CPHA, CPOL} :
     (adr_i[15:0] == CTRL_REG_OFFSET) ? {29'h0, tx_flush, rx_flush, rx_en} :
     (adr_i[15:0] == PR_REG_OFFSET) ? {16'h0, tx_threshold, rx_threshold} :
     (adr_i[15:0] == STATUS_REG_OFFSET) ? {30'h0, busy, done} :
