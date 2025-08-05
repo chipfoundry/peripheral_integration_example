@@ -34,18 +34,28 @@ async def uart_test(dut):
     # User project UART TX pins are connected to I/O pins: 1,3,5,7,9,11,13
     uart_tx_pins = [1, 3, 5, 7, 9, 11, 13]
     
-    # Wait a bit for UART transmission to start
-    await cocotb.triggers.Timer(1000, units='ns')
+    # Wait for UART transmission to start and monitor for activity
+    await cocotb.triggers.Timer(10000, units='ns')
     
-    # Check that UART TX pins show activity (should be toggling during transmission)
+    # Check that UART TX pins show activity by monitoring for transitions
     for i, tx_pin in enumerate(uart_tx_pins):
-        # Monitor the TX pin for activity
-        tx_value = caravelEnv.monitor_gpio(tx_pin, tx_pin)
-        cocotb.log.info(f"[TEST] UART{i} TX pin {tx_pin} value: {tx_value}")
+        # Get initial value
+        initial_value = caravelEnv.monitor_gpio(tx_pin, tx_pin)
+        cocotb.log.info(f"[TEST] UART{i} TX pin {tx_pin} initial value: {initial_value}")
         
-        # Note: We can't easily verify the exact data transmitted without a UART receiver
-        # But we can verify that the UART is configured and active by checking that
-        # the TX pin is not stuck at a constant value
+        # Wait a bit and check for any change (indicating UART activity)
+        await cocotb.triggers.Timer(5000, units='ns')
+        final_value = caravelEnv.monitor_gpio(tx_pin, tx_pin)
+        cocotb.log.info(f"[TEST] UART{i} TX pin {tx_pin} final value: {final_value}")
+        
+        # If both values are X, the UART is not properly configured
+        if initial_value == 'x' and final_value == 'x':
+            cocotb.log.error(f"[TEST] UART{i} TX pin {tx_pin} is not properly configured - showing X values")
+            assert False, f"UART{i} is not properly configured"
+        elif initial_value == final_value:
+            cocotb.log.warning(f"[TEST] UART{i} TX pin {tx_pin} shows no activity (static value: {initial_value})")
+        else:
+            cocotb.log.info(f"[TEST] UART{i} TX pin {tx_pin} shows activity (changed from {initial_value} to {final_value})")
     
     # Wait for final completion signal
     await caravelEnv.wait_mgmt_gpio(1)

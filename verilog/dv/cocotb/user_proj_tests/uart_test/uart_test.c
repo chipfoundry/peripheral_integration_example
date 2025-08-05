@@ -102,8 +102,23 @@ void main() {
             return;
         }
         
-        // Small delay to allow transmission
-        for (volatile int i = 0; i < 1000; i++);
+        // Step 7: Wait for transmission to complete (check TX FIFO becomes empty)
+        int timeout = 0;
+        while (CF_UART_getTxFIFOLevel(base_addr) > 0 && timeout < 10000) {
+            for (volatile int i = 0; i < 100; i++); // Small delay
+            timeout++;
+        }
+        
+        if (timeout >= 10000) {
+            ManagmentGpio_write(0xFF); // Error indicator - transmission timeout
+            return;
+        }
+        
+        // Step 8: Verify transmission completed
+        if (CF_UART_getTxFIFOLevel(base_addr) != 0) {
+            ManagmentGpio_write(0xFF); // Error indicator
+            return;
+        }
     }
     
     ManagmentGpio_write(1); // all tests completed successfully
