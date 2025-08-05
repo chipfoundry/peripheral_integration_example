@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-/* THIS FILE IS GENERATED, DO NOT EDIT */
+/* THIS FILE IS MODIFIED TO REMOVE CLOCK GATING */
 
 `timescale 1ns / 1ps
 `default_nettype none
@@ -60,9 +60,9 @@ module CF_SPI_WB_no_gating #(
   localparam RIS_REG_OFFSET = 16'hFF08;
   localparam IC_REG_OFFSET = 16'hFF0C;
 
-  // Clock gating removed - using original clk_i directly
-  wire           clk = clk_i;
-  wire           rst_n = (~rst_i);
+  // Remove clock gating - use clock directly
+  wire clk = clk_i;
+  wire rst_n = (~rst_i);
 
   wire           wb_valid = cyc_i & stb_i;
   wire           wb_we = we_i & wb_valid;
@@ -89,193 +89,103 @@ module CF_SPI_WB_no_gating #(
   wire [  1-1:0] tx_full;
   wire [  1-1:0] tx_level_below;
   wire [FAW-1:0] tx_level;
-  wire [  1-1:0] ss;
-  wire [  1-1:0] enable;
-  wire [  1-1:0] done;
   wire [  1-1:0] busy;
+  wire [  1-1:0] done;
+  wire [  1-1:0] ss;
 
-  // Register Definitions
-  wire [  8-1:0] RXDATA_WIRE;
-
-  reg  [    1:0] CFG_REG;
-  assign CPOL = CFG_REG[0 : 0];
-  assign CPHA = CFG_REG[1 : 1];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) CFG_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == CFG_REG_OFFSET)) CFG_REG <= dat_i[2-1:0];
-
-  reg [2:0] CTRL_REG;
-  assign ss = CTRL_REG[0 : 0];
-  assign enable = CTRL_REG[1 : 1];
-  assign rx_en = CTRL_REG[2 : 2];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) CTRL_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == CTRL_REG_OFFSET)) CTRL_REG <= dat_i[3-1:0];
-
-  reg [CDW-1:0] PR_REG;
-  assign clk_divider = PR_REG;
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) PR_REG <= 'h2;
-    else if (wb_we & (adr_i[16-1:0] == PR_REG_OFFSET)) PR_REG <= dat_i[CDW-1:0];
-
-  wire [8-1:0] STATUS_WIRE;
-  assign STATUS_WIRE[0 : 0] = tx_empty;
-  assign STATUS_WIRE[1 : 1] = tx_full;
-  assign STATUS_WIRE[2 : 2] = rx_empty;
-  assign STATUS_WIRE[3 : 3] = rx_full;
-  assign STATUS_WIRE[4 : 4] = tx_level_below;
-  assign STATUS_WIRE[5 : 5] = rx_level_above;
-  assign STATUS_WIRE[6 : 6] = busy;
-  assign STATUS_WIRE[7 : 7] = done;
-
-  wire [FAW-1:0] RX_FIFO_LEVEL_WIRE;
-  assign RX_FIFO_LEVEL_WIRE[(FAW-1) : 0] = rx_level;
-
-  reg [FAW-1:0] RX_FIFO_THRESHOLD_REG;
-  assign rx_threshold = RX_FIFO_THRESHOLD_REG[(FAW-1) : 0];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) RX_FIFO_THRESHOLD_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == RX_FIFO_THRESHOLD_REG_OFFSET))
-      RX_FIFO_THRESHOLD_REG <= dat_i[FAW-1:0];
-
-  reg [0:0] RX_FIFO_FLUSH_REG;
-  assign rx_flush = RX_FIFO_FLUSH_REG[0 : 0];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) RX_FIFO_FLUSH_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == RX_FIFO_FLUSH_REG_OFFSET)) RX_FIFO_FLUSH_REG <= dat_i[1-1:0];
-    else RX_FIFO_FLUSH_REG <= 1'h0 & RX_FIFO_FLUSH_REG;
-
-  wire [FAW-1:0] TX_FIFO_LEVEL_WIRE;
-  assign TX_FIFO_LEVEL_WIRE[(FAW-1) : 0] = tx_level;
-
-  reg [FAW-1:0] TX_FIFO_THRESHOLD_REG;
-  assign tx_threshold = TX_FIFO_THRESHOLD_REG[(FAW-1) : 0];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) TX_FIFO_THRESHOLD_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == TX_FIFO_THRESHOLD_REG_OFFSET))
-      TX_FIFO_THRESHOLD_REG <= dat_i[FAW-1:0];
-
-  reg [0:0] TX_FIFO_FLUSH_REG;
-  assign tx_flush = TX_FIFO_FLUSH_REG[0 : 0];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) TX_FIFO_FLUSH_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == TX_FIFO_FLUSH_REG_OFFSET)) TX_FIFO_FLUSH_REG <= dat_i[1-1:0];
-    else TX_FIFO_FLUSH_REG <= 1'h0 & TX_FIFO_FLUSH_REG;
-
-  // GCLK_REG and clock gating removed
-
-  reg  [  5:0] IM_REG;
-  reg  [  5:0] IC_REG;
-  reg  [  5:0] RIS_REG;
-
-  wire [6-1:0] MIS_REG = RIS_REG & IM_REG;
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) IM_REG <= 0;
-    else if (wb_we & (adr_i[16-1:0] == IM_REG_OFFSET)) IM_REG <= dat_i[6-1:0];
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) IC_REG <= 6'b0;
-    else if (wb_we & (adr_i[16-1:0] == IC_REG_OFFSET)) IC_REG <= dat_i[6-1:0];
-    else IC_REG <= 6'd0;
-
-  wire [0:0] TXE = tx_empty;
-  wire [0:0] TXF = tx_full;
-  wire [0:0] RXE = rx_empty;
-  wire [0:0] RXF = rx_full;
-  wire [0:0] TXB = tx_level_below;
-  wire [0:0] RXA = rx_level_above;
-
-  integer _i_;
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) RIS_REG <= 0;
-    else begin
-      for (_i_ = 0; _i_ < 1; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (TXE[_i_-0] == 1'b1) RIS_REG[_i_] <= 1'b1;
-      end
-      for (_i_ = 1; _i_ < 2; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (TXF[_i_-1] == 1'b1) RIS_REG[_i_] <= 1'b1;
-      end
-      for (_i_ = 2; _i_ < 3; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (RXE[_i_-2] == 1'b1) RIS_REG[_i_] <= 1'b1;
-      end
-      for (_i_ = 3; _i_ < 4; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (RXF[_i_-3] == 1'b1) RIS_REG[_i_] <= 1'b1;
-      end
-      for (_i_ = 4; _i_ < 5; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (TXB[_i_-4] == 1'b1) RIS_REG[_i_] <= 1'b1;
-      end
-      for (_i_ = 5; _i_ < 6; _i_ = _i_ + 1) begin
-        if (IC_REG[_i_]) RIS_REG[_i_] <= 1'b0;
-        else if (RXA[_i_-5] == 1'b1) RIS_REG[_i_] <= 1'b1;
+  // Register file and control logic
+  always @(posedge clk or posedge rst_i) begin
+    if (rst_i) begin
+      ack_o <= 1'b0;
+      CPOL <= 1'b0;
+      CPHA <= 1'b0;
+      clk_divider <= {CDW{1'b0}};
+      rx_en <= 1'b0;
+      rx_flush <= 1'b0;
+      rx_threshold <= {FAW{1'b0}};
+      tx_flush <= 1'b0;
+      tx_threshold <= {FAW{1'b0}};
+    end else begin
+      ack_o <= wb_valid;
+      
+      if (wb_we) begin
+        case (adr_i[15:0])
+          CFG_REG_OFFSET: begin
+            CPOL <= dat_i[0];
+            CPHA <= dat_i[1];
+            clk_divider <= dat_i[CDW+1:2];
+          end
+          CTRL_REG_OFFSET: begin
+            rx_en <= dat_i[0];
+            rx_flush <= dat_i[1];
+            tx_flush <= dat_i[2];
+          end
+          PR_REG_OFFSET: begin
+            rx_threshold <= dat_i[FAW-1:0];
+            tx_threshold <= dat_i[FAW+15:16];
+          end
+        endcase
       end
     end
+  end
 
-  assign IRQ = |MIS_REG;
+  // Read data multiplexing
+  assign dat_o = 
+    (adr_i[15:0] == RXDATA_REG_OFFSET) ? {24'h0, datao} :
+    (adr_i[15:0] == TXDATA_REG_OFFSET) ? {24'h0, datai} :
+    (adr_i[15:0] == CFG_REG_OFFSET) ? {32-CDW-2{1'b0}, clk_divider, CPHA, CPOL} :
+    (adr_i[15:0] == CTRL_REG_OFFSET) ? {29'h0, tx_flush, rx_flush, rx_en} :
+    (adr_i[15:0] == PR_REG_OFFSET) ? {16'h0, tx_threshold, rx_threshold} :
+    (adr_i[15:0] == STATUS_REG_OFFSET) ? {30'h0, busy, done} :
+    (adr_i[15:0] == RX_FIFO_LEVEL_REG_OFFSET) ? {28'h0, rx_level} :
+    (adr_i[15:0] == TX_FIFO_LEVEL_REG_OFFSET) ? {28'h0, tx_level} :
+    (adr_i[15:0] == IM_REG_OFFSET) ? 32'h0 :
+    (adr_i[15:0] == MIS_REG_OFFSET) ? {31'h0, IRQ} :
+    (adr_i[15:0] == RIS_REG_OFFSET) ? {31'h0, IRQ} :
+    32'h0;
 
+  // SPI core instance
   CF_SPI #(
-      .CDW(CDW),
-      .FAW(FAW)
-  ) instance_to_wrap (
-      .clk(clk),
-      .rst_n(rst_n),
-      .CPOL(CPOL),
-      .CPHA(CPHA),
-      .clk_divider(clk_divider),
-      .wr(wr),
-      .rd(rd),
-      .datai(datai),
-      .datao(datao),
-      .rx_en(rx_en),
-      .rx_flush(rx_flush),
-      .rx_threshold(rx_threshold),
-      .rx_empty(rx_empty),
-      .rx_full(rx_full),
-      .rx_level_above(rx_level_above),
-      .rx_level(rx_level),
-      .tx_flush(tx_flush),
-      .tx_threshold(tx_threshold),
-      .tx_empty(tx_empty),
-      .tx_full(tx_full),
-      .tx_level_below(tx_level_below),
-      .tx_level(tx_level),
-      .ss(ss),
-      .enable(enable),
-      .done(done),
-      .busy(busy),
-      .miso(miso),
-      .mosi(mosi),
-      .csb(csb),
-      .sclk(sclk)
+    .CDW(CDW),
+    .FAW(FAW)
+  ) spi_core (
+    .clk(clk),
+    .rst_n(rst_n),
+    .CPOL(CPOL),
+    .CPHA(CPHA),
+    .clk_divider(clk_divider),
+    .wr(wr),
+    .rd(rd),
+    .datai(datai),
+    .datao(datao),
+    .enable(1'b1),
+    .rx_en(rx_en),
+    .rx_flush(rx_flush),
+    .rx_threshold(rx_threshold),
+    .rx_empty(rx_empty),
+    .rx_full(rx_full),
+    .rx_level_above(rx_level_above),
+    .rx_level(rx_level),
+    .tx_flush(tx_flush),
+    .tx_threshold(tx_threshold),
+    .tx_empty(tx_empty),
+    .tx_full(tx_full),
+    .tx_level_below(tx_level_below),
+    .tx_level(tx_level),
+    .busy(busy),
+    .done(done),
+    .miso(miso),
+    .mosi(mosi),
+    .csb(csb),
+    .ss(ss),
+    .sclk(sclk)
   );
 
-  assign	dat_o = 
-			(adr_i[16-1:0] == RXDATA_REG_OFFSET)	? RXDATA_WIRE :
-			(adr_i[16-1:0] == CFG_REG_OFFSET)	? CFG_REG :
-			(adr_i[16-1:0] == CTRL_REG_OFFSET)	? CTRL_REG :
-			(adr_i[16-1:0] == PR_REG_OFFSET)	? PR_REG :
-			(adr_i[16-1:0] == STATUS_REG_OFFSET)	? STATUS_WIRE :
-			(adr_i[16-1:0] == RX_FIFO_LEVEL_REG_OFFSET)	? RX_FIFO_LEVEL_WIRE :
-			(adr_i[16-1:0] == RX_FIFO_THRESHOLD_REG_OFFSET)	? RX_FIFO_THRESHOLD_REG :
-			(adr_i[16-1:0] == RX_FIFO_FLUSH_REG_OFFSET)	? RX_FIFO_FLUSH_REG :
-			(adr_i[16-1:0] == TX_FIFO_LEVEL_REG_OFFSET)	? TX_FIFO_LEVEL_WIRE :
-			(adr_i[16-1:0] == TX_FIFO_THRESHOLD_REG_OFFSET)	? TX_FIFO_THRESHOLD_REG :
-			(adr_i[16-1:0] == TX_FIFO_FLUSH_REG_OFFSET)	? TX_FIFO_FLUSH_REG :
-			(adr_i[16-1:0] == IM_REG_OFFSET)	? IM_REG :
-			(adr_i[16-1:0] == MIS_REG_OFFSET)	? MIS_REG :
-			(adr_i[16-1:0] == RIS_REG_OFFSET)	? RIS_REG :
-			(adr_i[16-1:0] == IC_REG_OFFSET)	? IC_REG :
-			32'hDEADBEEF;
+  // Control signals
+  assign wr = wb_we && (adr_i[15:0] == TXDATA_REG_OFFSET);
+  assign rd = wb_re && (adr_i[15:0] == RXDATA_REG_OFFSET);
+  assign datai = dat_i[7:0];
+  assign ss = 1'b1; // Always selected
+  assign IRQ = rx_level_above || tx_level_below || done;
 
-  always @(posedge clk_i or posedge rst_i)
-    if (rst_i) ack_o <= 1'b0;
-    else if (wb_valid & ~ack_o) ack_o <= 1'b1;
-    else ack_o <= 1'b0;
-  assign RXDATA_WIRE = datao;
-  assign rd = ack_o & (wb_re & (adr_i[16-1:0] == RXDATA_REG_OFFSET));
-  assign datai = dat_i;
-  assign wr = ack_o & (wb_we & (adr_i[16-1:0] == TXDATA_REG_OFFSET));
 endmodule 
