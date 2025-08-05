@@ -31,7 +31,7 @@ async def uart_test(dut):
     cocotb.log.info(f"[TEST] Configuration finished")
     
     # Monitor UART TX pins to verify UART activity
-    # UART TX pins are connected to GPIO 1,3,5,7,9,11,13
+    # User project UART TX pins are connected to I/O pins: 1,3,5,7,9,11,13
     uart_tx_pins = [1, 3, 5, 7, 9, 11, 13]
     
     # Wait a bit for UART transmission to start

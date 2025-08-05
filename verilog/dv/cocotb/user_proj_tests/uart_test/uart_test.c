@@ -35,7 +35,7 @@
 #define UART_RIS             0x4048  // Raw interrupt status
 #define UART_IC              0x404C  // Interrupt clear
 
-// UART base addresses
+// UART base addresses for user project UARTs
 #define UART0_BASE   0x30000000
 #define UART1_BASE   0x30001000
 #define UART2_BASE   0x30002000
@@ -51,21 +51,22 @@ void main() {
     
     enableHkSpi(0); // disable housekeeping spi
     
-    // Configure GPIOs for UART TX/RX monitoring
-    GPIOs_configure(1, GPIO_MODE_MGMT_STD_OUTPUT);  // UART0 TX
-    GPIOs_configure(3, GPIO_MODE_MGMT_STD_OUTPUT);  // UART1 TX
-    GPIOs_configure(5, GPIO_MODE_MGMT_STD_OUTPUT);  // UART2 TX
-    GPIOs_configure(7, GPIO_MODE_MGMT_STD_OUTPUT);  // UART3 TX
-    GPIOs_configure(9, GPIO_MODE_MGMT_STD_OUTPUT);  // UART4 TX
-    GPIOs_configure(11, GPIO_MODE_MGMT_STD_OUTPUT); // UART5 TX
-    GPIOs_configure(13, GPIO_MODE_MGMT_STD_OUTPUT); // UART6 TX
+    // Configure GPIOs for user project UART monitoring
+    // UART TX pins are connected to odd-numbered I/O pins: 1,3,5,7,9,11,13
+    GPIOs_configure(1, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART0 TX
+    GPIOs_configure(3, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART1 TX
+    GPIOs_configure(5, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART2 TX
+    GPIOs_configure(7, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART3 TX
+    GPIOs_configure(9, GPIO_MODE_USER_STD_OUT_MONITORED);  // UART4 TX
+    GPIOs_configure(11, GPIO_MODE_USER_STD_OUT_MONITORED); // UART5 TX
+    GPIOs_configure(13, GPIO_MODE_USER_STD_OUT_MONITORED); // UART6 TX
     GPIOs_loadConfigs(); // load the configuration
     
     User_enableIF(); // enable interface for wishbone communication
     
     ManagmentGpio_write(1); // configuration finished
     
-    // Test all 7 UART peripherals
+    // Test all 7 UART peripherals in the user project
     for (int uart = 0; uart < 7; uart++) {
         uint32_t base_addr = UART0_BASE + (uart * 0x1000);
         
